@@ -263,8 +263,39 @@ func (h *Handler) AddComments(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	if err := h.Repo.AddComments(&comment); err != nil {
+	if err := h.Repo.AddComments(payload["email"].(string), &comment); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "Added comment successfully"})
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "Added comment successfully", "CommentID": comment.ID})
+}
+
+func (h *Handler) UpdateCommentByID(c *fiber.Ctx) error {
+	data := make(map[string]interface{})
+	cookie := c.Cookies("access_token")
+
+	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
+	}
+
+	payload := token.Claims.(jwt.MapClaims)
+
+	fmt.Println("Payload", payload)
+
+	commentID := c.Query("comment_id")
+
+	// parse requestbody, attach to Post struct
+	if err := c.BodyParser(&data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	fmt.Println("Data in uodate comment in handler", data)
+
+	if err := h.Repo.UpdateCommentByID(payload["email"].(string), commentID, data); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "comment updated successfully"})
 }

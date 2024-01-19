@@ -28,7 +28,8 @@ type Operations interface {
 	GetPostBasedOnCategory(category string, post *[]models.Post) error
 	GetAllCategory(Post *[]models.Post) error
 	GetPostStatistics(post *models.Post, postCount *int64) error
-	AddComments(comment *models.Comments) error
+	AddComments(mail string, comment *models.Comments) error
+	UpdateCommentByID(mail string, commentID string, data map[string]interface{}) error
 }
 
 func NewDbConnection(db *gorm.DB) *DbConnection {
@@ -222,8 +223,17 @@ func (db *DbConnection) GetPostStatistics(post *models.Post, postCount *int64) e
 
 // ---------------------------------Comments---------------------------------------------------------------------------
 // to add comments db operation
-func (db *DbConnection) AddComments(comment *models.Comments) error {
+func (db *DbConnection) AddComments(mail string, comment *models.Comments) error {
 	comment.ID = uuid.New()
+
+	if mail == "" {
+		return fmt.Errorf("mailID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
 	if err := db.DB.Create(&comment).Error; err != nil {
 		return err
 	}
@@ -239,7 +249,26 @@ func (db *DbConnection) AddComments(comment *models.Comments) error {
 	return nil
 }
 
-func (db *DbConnection) UpdateComment() error {
-	
+func (db *DbConnection) UpdateCommentByID(mail string, commentID string, data map[string]interface{}) error {
+	var comment models.Comments
+	if mail == "" {
+		return fmt.Errorf("mailID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
+	if err := db.DB.Debug().Where("id=?", commentID).First(&comment).Error; err != nil {
+		return err
+	}
+
+	fmt.Println("Data in update comment in handler", data)
+
+	for d, value := range data {
+		if err := db.DB.Model(&models.Comments{}).Where("id=?", commentID).Update(d, value).Error; err != nil {
+			return err
+		}
+	}
 	return nil
 }
