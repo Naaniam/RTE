@@ -27,9 +27,12 @@ type Operations interface {
 	GetPostBasedOnRoleID(mail string, post *[]models.Post) error
 	GetPostBasedOnCategory(category string, post *[]models.Post) error
 	GetAllCategory(Post *[]models.Post) error
-	GetPostStatistics(post *models.Post, postCount *int64) error
+	GetPostStatistics(post *models.Post, postCount, commentCount *int64) error
 	AddComments(mail string, comment *models.Comments) error
 	UpdateCommentByID(mail string, commentID string, data map[string]interface{}) error
+	DeleteCommentByID(mail string, commentID string, comment *models.Comments) error
+	GetCommentsBasedOnUser(mail string, comment *[]models.Comments) error
+	GetCommentsBasedOnPostID(postID string, comment *[]models.Comments) error
 }
 
 func NewDbConnection(db *gorm.DB) *DbConnection {
@@ -214,10 +217,15 @@ func (db *DbConnection) GetAllCategory(post *[]models.Post) error {
 }
 
 // to get the post statistics db operation
-func (db *DbConnection) GetPostStatistics(post *models.Post, postCount *int64) error {
+func (db *DbConnection) GetPostStatistics(post *models.Post, postCount, commentCount *int64) error {
 	if err := db.DB.Debug().Model(&post).Count(postCount).Error; err != nil {
 		return err
 	}
+
+	if err := db.DB.Debug().Model(&models.Comments{}).Count(commentCount).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -249,13 +257,24 @@ func (db *DbConnection) AddComments(mail string, comment *models.Comments) error
 	return nil
 }
 
+// Update the comment added by the user
 func (db *DbConnection) UpdateCommentByID(mail string, commentID string, data map[string]interface{}) error {
 	var comment models.Comments
+	user := models.User{}
+
 	if mail == "" {
 		return fmt.Errorf("mailID can not be empty")
 	}
 
-	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&user).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
+	if commentID == "" {
+		return fmt.Errorf("commentID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("id=?", commentID).Where("role_id=?", user.ID).First(&comment).Error; err != nil {
 		return fmt.Errorf("unauthorized")
 	}
 
@@ -269,6 +288,84 @@ func (db *DbConnection) UpdateCommentByID(mail string, commentID string, data ma
 		if err := db.DB.Model(&models.Comments{}).Where("id=?", commentID).Update(d, value).Error; err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// Delete comment by ID  DBOperation
+func (db *DbConnection) DeleteCommentByID(mail string, commentID string, comment *models.Comments) error {
+	user := &models.User{}
+	if mail == "" {
+		return fmt.Errorf("mailID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&user).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
+	if commentID == "" {
+		return fmt.Errorf("commentID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("id=?", commentID).Where("role_id=?", user.ID).First(&comment).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
+	if err := db.DB.Debug().Where("id=?", commentID).Delete(&comment).Error; err != nil {
+		return err
+	}
+
+	var commentCount int64
+	if err := db.DB.Debug().Model(&comment).Where("post_id = ?", comment.PostID).Count(&commentCount).Error; err != nil {
+		return err
+	}
+
+	if err := db.DB.Model(&models.Post{}).Where("id", comment.PostID).Update("comment_count", commentCount).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get all the comments
+func (db *DbConnection) GetAllComments(comment *[]models.Comments) error {
+	if err := db.DB.Debug().Find(&comment).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get all the comments added by the user
+func (db *DbConnection) GetCommentsBasedOnUser(mail string, comment *[]models.Comments) error {
+	user := models.User{}
+	if mail == "" {
+		return fmt.Errorf("mailID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&user).Error; err != nil {
+		return fmt.Errorf("unauthorized")
+	}
+
+	if err := db.DB.Debug().Where("role_id=?", user.ID).Find(&comment).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+// Get all the comments based ont the postID
+func (db *DbConnection) GetCommentsBasedOnPostID(postID string, comment *[]models.Comments) error {
+	// if mail == "" {
+	// 	return fmt.Errorf("mailID can not be empty")
+	// }
+
+	// if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
+	// 	return fmt.Errorf("unauthorized")
+	// }
+	if postID == "" {
+		return fmt.Errorf("postID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("post_id=?", postID).Find(&comment).Error; err != nil {
+		return err
 	}
 	return nil
 }

@@ -228,17 +228,17 @@ func (h *Handler) GetAllCategory(c *fiber.Ctx) error {
 
 func (h *Handler) GetPostStatistics(c *fiber.Ctx) error {
 	var postCount int64
+	var CommentCount int64
 	post := models.Post{}
 
-	if err := h.Repo.GetPostStatistics(&post, &postCount); err != nil {
+	if err := h.Repo.GetPostStatistics(&post, &postCount, &CommentCount); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
-	fmt.Println("Post count in handlers", postCount)
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Total posts": postCount})
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Total posts": postCount, "Total comments": CommentCount})
 }
 
-// -------------------------------------------------Comments--------------------------------------------------------------------
+// ------------------------------------------------Comments--------------------------------------------------------------------
 func (h *Handler) AddComments(c *fiber.Ctx) error {
 	comment := models.Comments{}
 	cookie := c.Cookies("access_token")
@@ -298,4 +298,56 @@ func (h *Handler) UpdateCommentByID(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "comment updated successfully"})
+}
+
+// Delete the comments added by the user based on the comment ID
+func (h *Handler) DeleteCommentByID(c *fiber.Ctx) error {
+	comment := models.Comments{}
+	cookie := c.Cookies("access_token")
+
+	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
+	}
+
+	payload := token.Claims.(jwt.MapClaims)
+
+	commentID := c.Query("comment_id")
+
+	if err := h.Repo.DeleteCommentByID(payload["email"].(string), commentID, &comment); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "comment deleted successfully"})
+}
+
+// Get all the comments added by the user
+func (h *Handler) GetCommentsBasedOnUser(c *fiber.Ctx) error {
+	comment := []models.Comments{}
+	cookie := c.Cookies("access_token")
+
+	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
+	}
+
+	payload := token.Claims.(jwt.MapClaims)
+
+	if err := h.Repo.GetCommentsBasedOnUser(payload["email"].(string), &comment); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Comments": comment})
+}
+
+func (h *Handler) GetCommentsBasedOnPostID(c *fiber.Ctx) error {
+	comment := []models.Comments{}
+	postID := c.Query("post_id")
+
+	if err := h.Repo.GetCommentsBasedOnPostID(postID, &comment); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Comments": comment})
 }

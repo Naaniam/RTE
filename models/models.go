@@ -33,6 +33,6 @@ type Comments struct {
 	PostID   uuid.UUID `json:"post_id" gorm:"type:char(190); column:post_id"`
 	RoleID   uuid.UUID `json:"role_id" gorm:"type:char(190); column:role_id"`
 	Feedback string    `json:"feedback" gorm:"primaryKey column:feedback"`
-	User     User      `gorm:"foreignKey:RoleID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-	Post     Post      `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	User     User      `json:"-" gorm:"foreignKey:RoleID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Post     Post      `json:"-" gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }

@@ -9,7 +9,7 @@ import (
 
 const (
 	JwtExpHour = 0
-	JwtExpMin  = 1
+	JwtExpMin  = 10
 	JwtExpSec  = 30
 )
 

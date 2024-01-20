@@ -31,6 +31,9 @@ func Routing(db *repository.DbConnection) {
 
 	routes.Post("/add-comment", middleware.MemberAuthorize([]byte("secret"), h.AddComments))
 	routes.Put("/update-comment", middleware.MemberAuthorize([]byte("secret"), h.UpdateCommentByID))
+	routes.Delete("/delete-comment", middleware.MemberAuthorize([]byte("secret"), h.DeleteCommentByID))
+	routes.Get("/get-comment-based-on-user", middleware.MemberAuthorize([]byte("secret"), h.GetCommentsBasedOnUser))
+	routes.Get("/get-comment-based-on-post", h.GetCommentsBasedOnPostID)
 
 	if err := app.Listen(":8000"); err != nil {
 		fmt.Println("Ended:", err)
