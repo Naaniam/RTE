@@ -3,6 +3,7 @@ package repository
 import (
 	"blogpost/middleware"
 	"blogpost/models"
+	"blogpost/utilities"
 	"fmt"
 	"log"
 	"time"
@@ -43,6 +44,12 @@ func NewDbConnection(db *gorm.DB, logger *log.Logger) *DbConnection {
 
 func (db *DbConnection) AddUser(user *models.User) error {
 	user.ID = uuid.New()
+
+	err := utilities.ValidateStruct(user)
+	if err != nil {
+		db.Logger.Printf("Error validating the struct")
+		return err
+	}
 
 	if err := db.DB.Create(&user).Error; err != nil {
 		db.Logger.Printf("Error creating user: %v", err)
@@ -110,6 +117,12 @@ func (db *DbConnection) GetRoleID(user *models.User) error {
 // ----------------------------------------------POST---------------------------------------------------------------------------
 func (db *DbConnection) AddPost(post *models.Post) error {
 	var checkingUser models.User
+
+	err := utilities.ValidateStruct(post)
+	if err != nil {
+		db.Logger.Printf("Error validating the struct")
+		return err
+	}
 
 	if err := db.DB.Debug().First(&checkingUser, "id=?", post.RoleID).Error; err != nil {
 		db.Logger.Println("invalid RoleID! Kindly Check it")
@@ -291,6 +304,12 @@ func (db *DbConnection) AddComments(mail string, comment *models.Comments) error
 	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
 		db.Logger.Printf("Error, %v Occured when searching the user based on the mail: %v", err, mail)
 		return fmt.Errorf("unauthorized")
+	}
+
+	err := utilities.ValidateStruct(comment)
+	if err != nil {
+		db.Logger.Printf("Error validating the struct")
+		return err
 	}
 
 	if err := db.DB.Create(&comment).Error; err != nil {
