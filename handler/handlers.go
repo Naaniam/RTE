@@ -4,6 +4,7 @@ import (
 	"blogpost/models"
 	"blogpost/repository"
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt"
@@ -12,11 +13,12 @@ import (
 )
 
 type Handler struct {
-	Repo repository.Operations
+	Repo   repository.Operations
+	Logger *log.Logger
 }
 
 func Newhandler(db *repository.DbConnection) *Handler {
-	return &Handler{Repo: db}
+	return &Handler{Repo: db, Logger: db.Logger}
 }
 
 // ------------------------------------------------------------USER---------------------------------------------------------------

@@ -5,13 +5,22 @@ import (
 	"blogpost/middleware"
 	"blogpost/repository"
 	"fmt"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func Routing(db *repository.DbConnection) {
 	h := handler.Newhandler(db)
+
 	app := fiber.New()
+	logger := log.New(log.Writer(), "Blog-Post ", log.LstdFlags)
+
+	// Middleware to log requests
+	app.Use(func(c *fiber.Ctx) error {
+		logger.Printf("Incoming Request: %s %s", c.Method(), c.Path())
+		return c.Next()
+	})
 
 	routes := app.Group("/blogpost/v1")
 
@@ -35,7 +44,9 @@ func Routing(db *repository.DbConnection) {
 	routes.Get("/get-comment-based-on-user", middleware.MemberAuthorize([]byte("secret"), h.GetCommentsBasedOnUser))
 	routes.Get("/get-comment-based-on-post", h.GetCommentsBasedOnPostID)
 
+	logger.Println("Server Started")
 	if err := app.Listen(":8000"); err != nil {
+		logger.Println("Server Ended")
 		fmt.Println("Ended:", err)
 		return
 	}
