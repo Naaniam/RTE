@@ -16,6 +16,6 @@ func SQLDriver() *gorm.DB {
 		panic(err)
 	}
 
-	fmt.Println("COnnection Established")
+	fmt.Println("Connection Established")
 	return db
 }

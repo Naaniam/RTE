@@ -27,12 +27,11 @@ func AdminAuthorize(jwtSecret []byte, next fiber.Handler) fiber.Handler {
 			return fiber.NewError(http.StatusInternalServerError, err.Error())
 		}
 
-		isAdmin, ok := claims["admin"].(string)
+		isAdmin, ok := claims["role"].(string)
 		if !ok || strings.ToLower(isAdmin) != "admin" {
 			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
 		}
 
-		c.Locals("token", token)
 		return next(c)
 	}
 }
@@ -56,12 +55,11 @@ func MemberAuthorize(jwtSecret []byte, next fiber.Handler) fiber.Handler {
 			return fiber.NewError(http.StatusInternalServerError, err.Error())
 		}
 
-		isAdmin, ok := claims["member"].(string)
+		isAdmin, ok := claims["role"].(string)
 		if !ok || strings.ToLower(isAdmin) != "member" {
 			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
 		}
 
-		c.Locals("token", token)
 		return next(c)
 	}
 }

@@ -9,3 +9,104 @@ Blog-Post 2024/01/22 12:47:34 Retrived all the comments for the post with ID:a82
 Blog-Post 2024/01/22 12:47:40 Retrived all the comments posted by the user with ID:a9c6b413-8784-4109-97c2-8c2b7b7a089f
 Blog-Post 2024/01/22 12:47:51 Retrived all the categories of the post
 Blog-Post 2024/01/22 12:47:58 Retrived all the post
+Blog-Post 2024/01/23 11:17:15 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 11:17:42 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:18:01 Retrived all the comments posted by the user with ID:a9c6b413-8784-4109-97c2-8c2b7b7a089f
+Blog-Post 2024/01/23 11:20:00 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:20:01 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:20:02 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:20:21 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:20:21 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:52:31 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 11:52:40 Retrived all the comments posted by the user with ID:a9c6b413-8784-4109-97c2-8c2b7b7a089f
+Blog-Post 2024/01/23 11:52:45 Error, Error 1054 (42S22): Unknown column 'views' in 'field list' Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:53:35 Error, Error 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`blogpost`.`posts`, CONSTRAINT `fk_posts_views` FOREIGN KEY (`views_count`) REFERENCES `views` (`id`) ON DELETE SET NULL ON UPDATE CASCADE) Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:56:58 Error, Error 1292 (22007): Truncated incorrect INTEGER value: '99198503-0ffe-45ba-9d0c-fd4164f0e0c1' Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 11:58:15 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:00:34 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:00:47 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:25:12 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 12:25:23 Error, Error 1292 (22007): Truncated incorrect INTEGER value: '99198503-0ffe-45ba-9d0c-fd4164f0e0c1' Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:25:30 Error, Error 1292 (22007): Truncated incorrect INTEGER value: '99198503-0ffe-45ba-9d0c-fd4164f0e0c1' Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:26:24 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:26:50 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:31:47 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:31:51 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:31:52 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:31:53 Retrived the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 12:41:32 Added user Successfully with ID e491a2f8-dd45-4e50-a455-dd2c9751b284
+Blog-Post 2024/01/23 12:41:52 Added user Successfully with ID 157d883e-42f5-4302-aadf-b87a522446f9
+Blog-Post 2024/01/23 12:42:17 Added user Successfully with ID fcf0e7ba-28cf-4f23-9443-05e0acc3b0ab
+Blog-Post 2024/01/23 12:42:26 Added user Successfully with ID c764d5c7-7c41-4d33-a74f-31dd50b24fcb
+Blog-Post 2024/01/23 12:45:35 Error validating the struct
+Blog-Post 2024/01/23 12:47:09 Added post with ID: 746d42fa-b8eb-4451-894f-9dededbd41a2
+Blog-Post 2024/01/23 12:48:30 Added post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 12:49:58 Added post with ID: 945c558a-0d89-42b6-a69d-ecc84083c6d7
+Blog-Post 2024/01/23 12:50:54 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 12:51:04 Error validating the struct
+Blog-Post 2024/01/23 12:52:25 Added new comment with ID:e0340695-145f-4c73-a911-353f6bd21e7f
+Blog-Post 2024/01/23 12:53:33 User with mailID haritha@gmail.com logged in successfully
+Blog-Post 2024/01/23 12:53:58 Added new comment with ID:3214b1c0-4ab8-4549-ac55-571da7e4cfee
+Blog-Post 2024/01/23 13:11:46 User with mailID haritha@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:12:09 Added new comment with ID:2783eb50-1e86-4b10-a003-ae7cbec5348b
+Blog-Post 2024/01/23 13:16:37 User with mailID haritha@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:16:47 Error, record not found Occured when searching the post with ID: 99198503-0ffe-45ba-9d0c-fd4164f0e0c1
+Blog-Post 2024/01/23 13:17:39 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:18:12 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:20:19 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:20:33 Added new comment with ID:eb0b08f2-3af2-4eb0-b20f-e7cbbef52861
+Blog-Post 2024/01/23 13:22:08 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:22:20 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:23:55 Error, Error 1054 (42S22): Unknown column 'post_id' in 'where clause' Occured when searching the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:25:09 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:25:16 Error, Error 1062 (23000): Duplicate entry '4' for key 'views.PRIMARY' Occured when creating the views
+Blog-Post 2024/01/23 13:25:41 Error, Error 1062 (23000): Duplicate entry '4' for key 'views.PRIMARY' Occured when creating the views
+Blog-Post 2024/01/23 13:27:13 Error, Error 1146 (42S02): Table 'blogpost.views' doesn't exist Occured
+Blog-Post 2024/01/23 13:27:23 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:27:35 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:29:34 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:30:54 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:30:56 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:30:57 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:30:58 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:31:11 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:52:26 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:52:34 Error, record not found Occured when searching the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:57:54 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 13:59:43 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 13:59:54 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:03:34 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:04:02 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:04:23 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:04:59 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:11:29 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 14:11:37 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:14:00 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:14:03 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:14:04 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:14:05 Retrived the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 14:56:53 Error creating the post: Error 1062 (23000): Duplicate entry 'Introduction to Go programming' for key 'posts.title'
+Blog-Post 2024/01/23 14:57:16 Added post with ID: 07c65110-65a8-4ba4-bd39-3eae8c5e8b23
+Blog-Post 2024/01/23 15:00:06 Added post with ID: efb6e6e7-5aa0-455f-bbb8-4dd4f80a346c
+Blog-Post 2024/01/23 15:01:26 Added post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:13:13 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 15:13:22 Error, record not found Occured when searching the post with ID: 6a0a9b31-1732-4084-82c8-fd7e33031987
+Blog-Post 2024/01/23 15:13:41 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:17:05 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:25:37 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 15:26:03 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:28:59 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:29:03 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:29:05 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 15:30:33 Retrived the post with ID: a32ad344-6b69-42aa-81a2-36967daffdb3
+Blog-Post 2024/01/23 16:06:20 Error creating user: Error 1062 (23000): Duplicate entry 'haritha@gmail.com' for key 'users.mail'
+Blog-Post 2024/01/23 16:06:38 Added user Successfully with ID 7b8483cd-789d-4495-b904-1a2dd3a94d1b
+Blog-Post 2024/01/23 16:08:12 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 16:09:00 User with mailID arunchandramohan@gmail.com logged in successfully
+Blog-Post 2024/01/23 16:10:59 Added post with ID: 21b0c79b-bde2-4972-b173-a767340e0576
+Blog-Post 2024/01/23 16:11:23 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 16:20:29 invalid MailID!!! kindly Check it
+Blog-Post 2024/01/23 16:20:34 user role id retrived
+Blog-Post 2024/01/23 16:21:51 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 16:22:17 User with mailID arunchandramohan@gmail.com logged in successfully
+Blog-Post 2024/01/23 16:23:50 User with mailID arun@gmail.com logged in successfully

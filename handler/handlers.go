@@ -83,11 +83,8 @@ func (h *Handler) AddPost(c *fiber.Ctx) error {
 
 	// parse requestbody, attach to Post struct
 	if err := c.BodyParser(&post); err != nil {
-		fmt.Println("ERROR", err)
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
 	}
-
-	fmt.Println("POST Data", post)
 
 	if err := h.Repo.AddPost(&post); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
@@ -151,6 +148,7 @@ func (h *Handler) UpdatePostByID(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Updated Successfully", "PostID": post.ID, "RoleID": post.RoleID, "Category": post.Category, "Title": post.Title, "Description": post.Description, "PostDate": post.PostDate, "CommentCount": post.CommentCount})
 }
 
+// Delete post based on PostID
 func (h *Handler) DeletePostByID(c *fiber.Ctx) error {
 	post := models.Post{}
 	postID := c.Query("post_id")
@@ -176,6 +174,32 @@ func (h *Handler) DeletePostByID(c *fiber.Ctx) error {
 }
 
 // get all the posts based on the role Id
+func (h *Handler) GetPostBasedOnPostID(c *fiber.Ctx) error {
+	post := models.Post{}
+
+	cookie := c.Cookies("access_token")
+
+	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
+		return []byte("secret"), nil
+	})
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
+	}
+
+	payload := token.Claims.(jwt.MapClaims)
+
+	fmt.Println("Payload", payload)
+	postID := c.Query("post_id")
+
+	err = h.Repo.GetPostbasedOnPostID(payload["email"].(string), postID, &post)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Retrived the post Successfully", "post": post})
+}
+
+// Get all the posts based on the role Id
 func (h *Handler) GetPostBasedOnRoleID(c *fiber.Ctx) error {
 	post := []models.Post{}
 
@@ -184,6 +208,7 @@ func (h *Handler) GetPostBasedOnRoleID(c *fiber.Ctx) error {
 	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
 	})
+	
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
 	}
@@ -224,7 +249,6 @@ func (h *Handler) GetAllCategory(c *fiber.Ctx) error {
 		categories = append(categories, post.Category)
 	}
 
-	fmt.Println("Categories", categories)
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Categories": categories})
 }
 
@@ -272,6 +296,7 @@ func (h *Handler) AddComments(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Message": "Added comment successfully", "CommentID": comment.ID})
 }
 
+// Update the comments based on comment ID
 func (h *Handler) UpdateCommentByID(c *fiber.Ctx) error {
 	data := make(map[string]interface{})
 	cookie := c.Cookies("access_token")
@@ -344,6 +369,7 @@ func (h *Handler) GetCommentsBasedOnUser(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(fiber.Map{"Comments": comment})
 }
 
+// GetCommentsBasedOnPostID
 func (h *Handler) GetCommentsBasedOnPostID(c *fiber.Ctx) error {
 	comment := []models.Comments{}
 	postID := c.Query("post_id")

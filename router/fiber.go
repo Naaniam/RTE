@@ -26,16 +26,18 @@ func Routing(db *repository.DbConnection) {
 
 	routes.Post("/signup", h.AddUser)
 	routes.Post("/login", h.Login)
-	//routes.Get("/get-role-id", h.GetRoleID)
+	routes.Get("/get-role-id", h.GetRoleID)
 
 	routes.Post("/add-post", middleware.AdminAuthorize([]byte("secret"), h.AddPost))
 	routes.Get("/search-all-posts", h.SearchAllPost)
 	routes.Get("/get-all-category", h.GetAllCategory)
 	routes.Get("/get-posts-by-role-id", middleware.AdminAuthorize([]byte("secret"), h.GetPostBasedOnRoleID))
+	routes.Get("/get-post-by-category", h.GetPostBasedOnCategory)
+	routes.Get("/get-post-by-id", middleware.MemberAuthorize([]byte("secret"), h.GetPostBasedOnPostID))
 	routes.Put("/update-post-by-id", middleware.AdminAuthorize([]byte("secret"), h.UpdatePostByID))
 	//routes.Get("/get-post-id", middleware.AdminAuthorize([]byte("secret"), h.GetPostID))
 	routes.Delete("/delete-post-by-id", middleware.AdminAuthorize([]byte("secret"), h.DeletePostByID))
-	routes.Get("/get-post-by-category", h.GetPostBasedOnCategory)
+
 	routes.Get("/get-post-statistics", h.GetPostStatistics)
 
 	routes.Post("/add-comment", middleware.MemberAuthorize([]byte("secret"), h.AddComments))

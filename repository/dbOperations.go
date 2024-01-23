@@ -29,6 +29,7 @@ type Operations interface {
 	DeletePostByID(mail string, PostID string, post *models.Post) error
 	GetPostBasedOnRoleID(mail string, post *[]models.Post) error
 	GetPostBasedOnCategory(category string, post *[]models.Post) error
+	GetPostbasedOnPostID(mail string, postID string, post *models.Post) error
 	GetAllCategory(Post *[]models.Post) error
 	GetPostStatistics(post *models.Post, postCount, commentCount *int64) error
 	AddComments(mail string, comment *models.Comments) error
@@ -118,22 +119,22 @@ func (db *DbConnection) GetRoleID(user *models.User) error {
 func (db *DbConnection) AddPost(post *models.Post) error {
 	var checkingUser models.User
 
-	err := utilities.ValidateStruct(post)
-	if err != nil {
-		db.Logger.Printf("Error validating the struct")
-		return err
-	}
-
-	if err := db.DB.Debug().First(&checkingUser, "id=?", post.RoleID).Error; err != nil {
+	if err := db.DB.Debug().Where("role=?").First(&checkingUser, "id=?", post.RoleID).Error; err != nil {
 		db.Logger.Println("invalid RoleID! Kindly Check it")
 		return fmt.Errorf("invalid RoleID! Kindly Check it")
 	}
+
 	post.ID = uuid.New()
 	post.PostDate = time.Now()
+
+	fmt.Println("post---------> before:", post)
+
 	if err := db.DB.Create(&post).Error; err != nil {
 		db.Logger.Printf("Error creating the post: %v", err)
 		return err
 	}
+
+	fmt.Println("post---------> after:", post)
 
 	db.Logger.Printf("Added post with ID: %v", post.ID)
 	return nil
@@ -152,12 +153,74 @@ func (db *DbConnection) GetPostID(post *models.Post) error {
 
 // Search all the posts
 func (db *DbConnection) SearchAllPost(post *[]models.Post) error {
-	if err := db.DB.Debug().Select("id", "role_id", "category", "title", "description", "post_date", "comment_count").Find(&post).Error; err != nil {
+	if err := db.DB.Debug().Find(&post).Error; err != nil {
 		db.Logger.Printf("%v", err)
 		return err
 	}
 
+	if len(*post) == 0 {
+		return fmt.Errorf("empty Post")
+	}
+
 	db.Logger.Println("Retrived all the post")
+	return nil
+}
+
+// GetPostbasedOnPostID
+func (db *DbConnection) GetPostbasedOnPostID(mail string, postID string, post *models.Post) error {
+	user := models.User{}
+	view := models.Views{}
+
+	if mail == "" {
+		db.Logger.Printf("mailID can not be empty")
+		return fmt.Errorf("mailID can not be empty")
+	}
+
+	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&user).Error; err != nil {
+		db.Logger.Printf("Error finding the user: %v", err)
+		return fmt.Errorf("unauthorized")
+	}
+
+	if postID == "" {
+		db.Logger.Printf("PostID can not be empty")
+		return fmt.Errorf("PostID can not be empty")
+	}
+
+	if err := db.DB.Debug().First(&post, "id=?", postID).Error; err != nil {
+		db.Logger.Printf("Error, %v Occured when searching the post with ID: %v", err, postID)
+		return err
+	}
+
+	viewscount := post.ViewsCount
+	if err := db.DB.Debug().Model(&post).Where("id=?", postID).Update("views_count", viewscount+1).Error; err != nil {
+		db.Logger.Printf("Error, %v Occured when searching the post with ID: %v", err, postID)
+		return err
+	}
+
+	existingViewLog := &models.Views{}
+	existingViewLog.ID = uuid.New()
+	existingViewLog.RoleID = user.ID
+	existingViewLog.PostID = post.ID
+	existingViewLog.IsViewed = false
+	existingViewLog.Views = post.ViewsCount
+	if err := db.DB.Debug().Create(&existingViewLog).Error; err != nil {
+		existingViewLog.IsViewed = true
+		db.Logger.Printf("Error, %v Occured when creating the view table: %v", err, postID)
+		return err
+	}
+
+	if err := db.DB.Debug().First(&view, "post_id=?", postID).Error; err != nil {
+		db.Logger.Printf("Error, %v Occured when searching the post with ID: %v", err, postID)
+		return err
+	}
+
+	if !view.IsViewed {
+		fmt.Println("Hoi")
+		post.UserCount++
+		view.IsViewed = true
+	}
+
+	db.Logger.Println("Retrived the post with ID:", postID)
 	return nil
 }
 
@@ -172,7 +235,7 @@ func (db *DbConnection) UpdatePostByID(PostID string, mail string, data map[stri
 	}
 
 	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "admin").First(&user).Error; err != nil {
-		db.Logger.Printf("Error creating the token: %v", err)
+		db.Logger.Printf("Error finding the user: %v", err)
 		return nil, fmt.Errorf("unauthorized")
 	}
 
@@ -182,13 +245,13 @@ func (db *DbConnection) UpdatePostByID(PostID string, mail string, data map[stri
 	}
 
 	if err := db.DB.Debug().Where("role_id=?", user.ID).First(&post, "id=?", PostID).Error; err != nil {
-		db.Logger.Printf("Error creating the token: %v", err)
+		db.Logger.Printf("Error: %v", err)
 		return nil, err
 	}
 
 	for d, value := range data {
 		if err := db.DB.Debug().Model(&post).Where("id=?", PostID).Update(d, value).Error; err != nil {
-			db.Logger.Printf("Error creating the token: %v", err)
+			db.Logger.Printf("Error: %v", err)
 			return nil, err
 		}
 	}
@@ -249,6 +312,10 @@ func (db *DbConnection) GetPostBasedOnRoleID(mail string, post *[]models.Post) e
 		return err
 	}
 
+	if len(*post) == 0 {
+		return fmt.Errorf("empty Post")
+	}
+
 	db.Logger.Printf("Retrived the posts posted the user with ID:%v", user.ID)
 	return nil
 }
@@ -258,6 +325,10 @@ func (db *DbConnection) GetPostBasedOnCategory(category string, post *[]models.P
 	if err := db.DB.Debug().Where("category=?", category).Find(&post).Error; err != nil {
 		db.Logger.Printf("Error %v Occured when searching the post based on the category: %v", err, category)
 		return err
+	}
+
+	if len(*post) == 0 {
+		return fmt.Errorf("empty Post")
 	}
 
 	db.Logger.Printf("Retrived the posts based ont the category:%v", category)
@@ -295,6 +366,7 @@ func (db *DbConnection) GetPostStatistics(post *models.Post, postCount, commentC
 // to add comments db operation
 func (db *DbConnection) AddComments(mail string, comment *models.Comments) error {
 	comment.ID = uuid.New()
+	post := models.Post{}
 
 	if mail == "" {
 		db.Logger.Printf("mailID can not be empty")
@@ -304,12 +376,6 @@ func (db *DbConnection) AddComments(mail string, comment *models.Comments) error
 	if err := db.DB.Debug().Where("mail=?", mail).Where("role=?", "user").First(&models.User{}).Error; err != nil {
 		db.Logger.Printf("Error, %v Occured when searching the user based on the mail: %v", err, mail)
 		return fmt.Errorf("unauthorized")
-	}
-
-	err := utilities.ValidateStruct(comment)
-	if err != nil {
-		db.Logger.Printf("Error validating the struct")
-		return err
 	}
 
 	if err := db.DB.Create(&comment).Error; err != nil {
@@ -323,8 +389,14 @@ func (db *DbConnection) AddComments(mail string, comment *models.Comments) error
 		return err
 	}
 
-	if err := db.DB.Model(&models.Post{}).Where("id", comment.PostID).Update("comment_count", commentCount).Error; err != nil {
+	if err := db.DB.Model(&post).Where("id", comment.PostID).Update("comment_count", commentCount).Error; err != nil {
 		db.Logger.Printf("Error, %v Occured when updating the comment count", err)
+		return err
+	}
+
+	viewscount := post.ViewsCount
+	if err := db.DB.Debug().Model(&post).Where("id=?", comment.PostID).Update("views_count", viewscount+1).Error; err != nil {
+		db.Logger.Printf("Error, %v Occured when updating the views count", err)
 		return err
 	}
 

@@ -16,10 +16,10 @@ const (
 // MemberToken fubnction is used to generate a new token for the members
 func MemberToken(email string, id uuid.UUID) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"member": "member",
-		"id":     id,
-		"email":  email,
-		"exp":    time.Now().Local().Add(time.Hour*time.Duration(JwtExpHour) + time.Minute*time.Duration(JwtExpMin) + time.Second*time.Duration(JwtExpSec)).Unix(),
+		"role":  "member",
+		"id":    id,
+		"email": email,
+		"exp":   time.Now().Local().Add(time.Hour*time.Duration(JwtExpHour) + time.Minute*time.Duration(JwtExpMin) + time.Second*time.Duration(JwtExpSec)).Unix(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret
@@ -32,7 +32,7 @@ func MemberToken(email string, id uuid.UUID) (string, error) {
 }
 
 func AdminToken(email string, id uuid.UUID) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"id": id, "email": email, "admin": "admin", "exp": time.Now().Add(time.Hour * 24 * 30).Unix()})
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"id": id, "email": email, "role": "admin", "exp": time.Now().Add(time.Hour * 24 * 30).Unix()})
 
 	tokenString, err := token.SignedString([]byte("secret"))
 	if err != nil {
