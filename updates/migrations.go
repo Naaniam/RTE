@@ -7,5 +7,5 @@ import (
 )
 
 func Migrations(db *gorm.DB) {
-	db.AutoMigrate(&models.User{}, &models.Post{}, &models.Comments{}, models.Views{})
+	db.AutoMigrate(&models.LookUp{})
 }

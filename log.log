@@ -110,3 +110,12 @@ Blog-Post 2024/01/23 16:20:34 user role id retrived
 Blog-Post 2024/01/23 16:21:51 User with mailID arun@gmail.com logged in successfully
 Blog-Post 2024/01/23 16:22:17 User with mailID arunchandramohan@gmail.com logged in successfully
 Blog-Post 2024/01/23 16:23:50 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 18:01:45 Added user Successfully with ID 1137e079-e38c-4c72-a676-be3b3f7c2b27
+Blog-Post 2024/01/23 18:04:27 Error creating user: Error 1062 (23000): Duplicate entry 'gnaniharitha@gmail.com' for key 'users.mail'
+Blog-Post 2024/01/23 18:04:47 Added user Successfully with ID e5acf26a-4b37-4fab-888c-de21c03e21a1
+Blog-Post 2024/01/23 18:04:57 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 18:05:12 User with mailID arun@gmail.com logged in successfully
+Blog-Post 2024/01/23 18:05:12 Retrived all the post
+Blog-Post 2024/01/23 19:20:58 Added user Successfully with ID ccc0c290-d534-46d6-a702-52f64195c46e
+Blog-Post 2024/01/23 19:24:24 Added user Successfully with ID 1881ed44-84e0-4383-a6af-f861e4bcffad
+Blog-Post 2024/01/23 19:25:08 mail or password can't be empty

@@ -19,7 +19,7 @@ func AdminAuthorize(jwtSecret []byte, next fiber.Handler) fiber.Handler {
 			return jwtSecret, nil
 		})
 		if err != nil || !token.Valid {
-			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
+			return fiber.NewError(http.StatusUnauthorized, "Unauthorized Admin")
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)
@@ -29,7 +29,7 @@ func AdminAuthorize(jwtSecret []byte, next fiber.Handler) fiber.Handler {
 
 		isAdmin, ok := claims["role"].(string)
 		if !ok || strings.ToLower(isAdmin) != "admin" {
-			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "UnAuthorized Admin"})
 		}
 
 		return next(c)
@@ -40,14 +40,14 @@ func MemberAuthorize(jwtSecret []byte, next fiber.Handler) fiber.Handler {
 	return func(c *fiber.Ctx) error {
 		tokenString := ExtractTokenFromHeader(c)
 		if tokenString == "" {
-			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "UnAuthorized Member"})
 		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			return jwtSecret, nil
 		})
 		if err != nil || !token.Valid {
-			return fiber.NewError(http.StatusUnauthorized, "Unauthorized")
+			return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{"error": "UnAuthorized Member"})
 		}
 
 		claims, ok := token.Claims.(jwt.MapClaims)

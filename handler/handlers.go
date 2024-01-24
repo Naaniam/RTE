@@ -41,7 +41,10 @@ func (h *Handler) AddUser(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": err.Error()})
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Created User!!! Kindly store/remeber the user id!!!!", "userID": user.ID})
+	loginUrl := fmt.Sprintf("localhost:8000/blogpost/v1/login/%s", user.Mail)
+	fmt.Println(loginUrl)
+
+	return c.Status(fiber.StatusCreated).JSON(fiber.Map{"message": "Created User!!! Kindly store/remeber the user id!!!!", "userID": user.ID, "loginURL": loginUrl})
 }
 
 // Login
@@ -59,7 +62,8 @@ func (h *Handler) Login(c *fiber.Ctx) error {
 		Value: token,
 	})
 
-	return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Loggged in Successfully!!!", "Token": token})
+	return c.Redirect("/blogpost/v1/search-all-posts", fiber.StatusFound)
+	//return c.Status(fiber.StatusOK).JSON(fiber.Map{"message": "Loggged in Successfully!!!", "Token": token})
 }
 
 // GetRoleID Handler function
@@ -208,7 +212,7 @@ func (h *Handler) GetPostBasedOnRoleID(c *fiber.Ctx) error {
 	token, err := jwt.Parse(cookie, func(token *jwt.Token) (interface{}, error) {
 		return []byte("secret"), nil
 	})
-	
+
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{"error": fiber.Map{"error": err.Error()}})
 	}

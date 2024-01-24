@@ -2,9 +2,11 @@ package main
 
 import (
 	driver "blogpost/drivers"
-	"blogpost/migrators"
+	"blogpost/lookup"
+
 	"blogpost/repository"
 	"blogpost/router"
+	migrators "blogpost/updates"
 	"fmt"
 	"io"
 	"log"
@@ -25,5 +27,6 @@ func main() {
 
 	dbConnection := driver.SQLDriver()
 	migrators.Migrations(dbConnection)
+	lookup.LookUp(migrators.NewLookUpDB(dbConnection))
 	router.Routing(repository.NewDbConnection(dbConnection, logger))
 }

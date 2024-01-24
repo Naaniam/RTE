@@ -44,3 +44,14 @@ type Views struct {
 	Post     Post      `json:"-" gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	User     User      `json:"-" gorm:"foreignKey:RoleID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
+
+type LookUp struct {
+	ID      int    `json:"id" gorm:"column:id"`
+	Name    string `gorm:"unique;column:name"`
+	Version int    `gorm:"unique;column:version"`
+}
+
+type Category struct {
+	ID   uuid.UUID `json:"id" gorm:"type:char(190);column:id"`
+	Name string    `json:"name" gorm:"name"`
+}
